@@ -83,7 +83,16 @@ class BinOpAst():
         Reduce additive identities
         x + 0 = x
         """
-        # IMPLEMENT ME!
+        if self.right.val == '+':
+		self.right = self.right.additive_identity()
+	if self.left.val == '+':
+		self.left = self.left.additive_identity()
+
+	if self.left.val == 0 or self.right.val == 0:
+		if self.left.val != 0:
+			return self.left.val
+		else:
+			return self.right.val
         pass
                         
     def multiplicative_identity(self):
@@ -124,9 +133,26 @@ class BinOpAst():
         """
         self.additive_identity()
         self.multiplicative_identity()
-        self.mult_by_zero()
-        self.constant_fold()
+        # self.mult_by_zero()
+        # self.constant_fold()
+	
+	class BinTreeSumTester(unittest.TestCase):
+    		def test_additive_identity(self):
+    			ins = osjoin('testbench/arith_id', 'inputs')
+	    		outs = osjoin('testbench/arith_id', 'outputs')
+		        for fname in os.listdir(ins):
+            			current_inputs =  open(osjoin(ins, fname))
+                		inp = current_inputs.read().strip()
+				current_inputs.close()
 
+            			current_outputs = open(osjoin(outs, fname))
+                		expected = int(current_outputs.read().strip())
+				currenet_outputs.close()
+
+	                 	tree = BinOpAst(inp.split())
+				tree.additive_identity()
+                		out = tree.postfix_str()
+                    		self.assertEqual(out, expected)
 
 if __name__ == "__main__":
     unittest.main()
